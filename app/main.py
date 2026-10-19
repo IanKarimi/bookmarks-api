@@ -37,4 +37,23 @@ def get_bookmark(bookmark_id: int):
     for bookmark in bookmarks:
         if bookmark.id == bookmark_id:
             return bookmark
+        raise HTTPException(status_code=404, detail="Bookmark not found")
+
+
+@app.put("/bookmarks/{bookmark_id}", response_model=Bookmark)
+def update_bookmark(bookmark_id: int, data: BookmarkCreate):
+    for index, bookmark in enumerate(bookmarks):
+        if bookmark.id == bookmark_id:
+            updated = Bookmark(id=bookmark_id, **data.model_dump())
+            bookmarks[index] = updated
+            return updated
+    raise HTTPException(status_code=404, detail="Bookmark not found")
+
+
+@app.delete("/bookmarks/{bookmark_id}", status_code=204)
+def delete_bookmark(bookmark_id: int):
+    for index, bookmark in enumerate(bookmarks):
+        if bookmark.id == bookmark_id:
+            bookmarks.pop(index)
+            return
     raise HTTPException(status_code=404, detail="Bookmark not found")
