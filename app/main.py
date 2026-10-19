@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.schemas import Bookmark, BookmarkCreate
 
@@ -30,3 +30,11 @@ def create_bookmark(data: BookmarkCreate):
 @app.get("/bookmarks", response_model=list[Bookmark])
 def list_bookmarks():
     return bookmarks
+
+
+@app.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
+def get_bookmark(bookmark_id: int):
+    for bookmark in bookmarks:
+        if bookmark.id == bookmark_id:
+            return bookmark
+    raise HTTPException(status_code=404, detail="Bookmark not found")
