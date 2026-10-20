@@ -65,9 +65,20 @@ def create_bookmark(data: BookmarkCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/bookmarks", response_model=list[Bookmark])
-def list_bookmarks(db: Session = Depends(get_db)):
-    rows = db.scalars(select(models.BookmarkDB)).all()
-    return [to_schema(row) for row in rows]
+def list_bookmarks(
+    search: str | None = None,
+    tag: str | None = None,
+    db: Session = Depends(get_db),
+):
+
+    query = select(models.BookmarkDB)
+    if search:
+        query = query.where(models.BookmarkDB.title.ilike(f"%{search}%"))
+    rows = db.scalars(query).all()
+    bookmarks = [to_schema(row) for row in rows]
+    if tag:
+        bookmarks = [b for b in bookmarks if tag in b.tags]
+    return bookmarks
 
 
 @app.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
