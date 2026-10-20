@@ -34,7 +34,7 @@ def to_schema(row: models.BookmarkDB) -> Bookmark:
         id=row.id,
         title=row.title,
         url=row.url,
-        tags=row.tags.split(",") if row.tags else[],
+        tags=row.tags.split(",") if row.tags else [],
     )
 
 
@@ -63,6 +63,11 @@ def create_bookmark(data: BookmarkCreate, db: Session = Depends(get_db)):
     db.refresh(row)
     return to_schema(row)
 
+
+@app.get("/bookmarks", response_model=list[Bookmark])
+def list_bookmarks(db: Session = Depends(get_db)):
+    rows = db.scalars(select(models.BookmarkDB)).all()
+    return [to_schema(row) for row in rows]
 
 
 @app.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
