@@ -48,3 +48,39 @@ def test_delete_bookmark(client):
     assert response.status_code == 204
     assert client.get("/bookmarks/1").status_code == 404
 
+
+def test_search_by_title(client):
+    client.post(
+        "/bookmarks",
+        json={"title": "Python Tutorial", "url": "https://python.org", "tags": []}
+    )
+    client.post(
+        "/bookmarks",
+        json={"title": "Cooking Basics", "url": "https://example.com", "tags": []}
+    )
+    response = client.get("/bookmarks", params={"search": "python"})
+    assert response.status_code == 200
+    titles = [b["title"] for b in response.json()]
+    assert titles == ["Python Tutorial"]
+
+
+def test_filter_by_tag(client):
+    client.post(
+        "/bookmarks",
+        json={"title": "Python", "url": "https://python.org", "tags": ["coding"]},
+    )
+    client.post(
+        "/bookmarks",
+        json={"title": "Cooking", "url": "https://example.com", "tags": ["food"]},
+    )
+    response = client.get("/bookmarks", params={"tag": "food"})
+    assert response.status_code == 200
+    titles = [b["title"] for b in response.json()]
+    assert titles == ["Cooking"]
+
+
+def test_search_no_match_returns_empty_list(client):
+    response = client.get("/bookmarks", params={"search": "zzz"})
+    assert response.status_code == 200
+    assert response.json() == []
+
