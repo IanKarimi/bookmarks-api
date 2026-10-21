@@ -21,3 +21,30 @@ def test_create_bookmark(client):
 def test_get_missing_bookmark_returns_404(client):
     response = client.get("/bookmarks/999")
     assert response.status_code == 404
+
+
+def test_update_bookmark(client):
+    client.post(
+        "/bookmarks",
+        json={"title": "Python", "url": "https://python.org", "tags": ["coding"]},
+    )
+    response = client.put(
+        "/bookmarks/1",
+        json={"title": "Python Docs", "url": "https://docs.python.org", "tags": []},
+    )
+    assert response.status_code == 200
+    assert response.json()["title"] == "Python Docs"
+    assert response.json()["id"] == 1
+
+
+
+
+def test_delete_bookmark(client):
+    client.post(
+        "/bookmarks",
+        json={"title": "Python", "url": "https://python.org", "tags": []},
+    )
+    response = client.delete("/bookmarks/1")
+    assert response.status_code == 204
+    assert client.get("/bookmarks/1").status_code == 404
+
