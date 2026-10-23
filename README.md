@@ -18,7 +18,7 @@ A small REST API for saving and searching bookmarks, built with FastAPI, SQLAlch
 ## Setup
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/rankin-jpg/bookmarks-api.git
 cd bookmarks-api
 python -m venv venv
 venv\Scripts\activate        # Mac/Linux: source venv/bin/activate
