@@ -1,5 +1,7 @@
 # Bookmarks API
 
+![Tests](https://github.com/IanKarimi/bookmarks-api/actions/workflows/tests.yml/badge.svg)
+
 A small REST API for saving and searching bookmarks, built with FastAPI, SQLAlchemy and SQLite.
 
 ## Features
@@ -18,7 +20,7 @@ A small REST API for saving and searching bookmarks, built with FastAPI, SQLAlch
 ## Setup
 
 ```bash
-git clone https://github.com/rankin-jpg/bookmarks-api.git
+git clone https://github.com/IanKarimi/bookmarks-api.git
 cd bookmarks-api
 python -m venv venv
 venv\Scripts\activate        # Mac/Linux: source venv/bin/activate
